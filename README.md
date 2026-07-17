@@ -1,19 +1,8 @@
 # AI-Powered Online Proctoring System using OpenVINO
 
-A real-time AI-powered online proctoring prototype that combines object detection, gaze estimation, and OpenVINO inference optimization to detect suspicious examination behavior using CPU-only inference.
+A real-time AI-powered online proctoring prototype that combines object detection, gaze estimation, and OpenVINO inference optimization for efficient CPU-based inference.
 
-The project focuses on building and optimizing a computer vision pipeline suitable for edge deployment with low latency and high throughput.
-
----
-
-## Overview
-
-This project integrates two primary computer vision tasks:
-
-- Object Detection using YOLOv8n
-- Gaze Estimation using a multi-stage inference pipeline
-
-The models were optimized using OpenVINO and INT8 post-training quantization to achieve real-time performance on commodity CPUs.
+The project demonstrates an optimized computer vision pipeline capable of detecting prohibited objects and estimating candidate gaze direction using pretrained deep learning models accelerated with OpenVINO.
 
 ---
 
@@ -22,47 +11,49 @@ The models were optimized using OpenVINO and INT8 post-training quantization to 
 - Real-time object detection using YOLOv8n
 - Multi-stage gaze estimation pipeline
 - OpenVINO IR model conversion
-- INT8 post-training quantization with NNCF
+- INT8 post-training quantization using NNCF
 - CPU-optimized inference
 - Performance benchmarking
-- Failure analysis and production considerations
-
----
-
-## System Architecture
-
-```
-                    Webcam
-                       │
-                       ▼
-               Frame Acquisition
-                       │
-        ┌──────────────┴──────────────┐
-        ▼                             ▼
- Object Detection               Gaze Estimation
-    (YOLOv8n)                  (4-Stage Pipeline)
-        │                             │
-        └──────────────┬──────────────┘
-                       ▼
-             Threat Analysis Logic
-                       │
-                       ▼
-              Alert Generation
-```
+- Failure analysis and visualization
+- Automated benchmarking and plotting utilities
 
 ---
 
 ## Technology Stack
 
-| Component | Technology |
-|----------|------------|
-| Language | Python |
-| Computer Vision | OpenCV |
-| Deep Learning | PyTorch |
-| Deployment | OpenVINO Runtime |
-| Object Detection | YOLOv8n |
-| Optimization | NNCF |
-| Model Format | OpenVINO IR |
+- Python
+- OpenCV
+- PyTorch
+- OpenVINO Runtime
+- OpenVINO Model Optimizer
+- NNCF
+- Ultralytics YOLOv8
+
+---
+
+## Repository Structure
+
+```
+.
+├── models/                         # OpenVINO models and downloaded gaze models
+├── outputs/                        # Benchmark outputs and generated visualizations
+├── test_images/                    # Sample images for testing
+│
+├── analyze_failures.py             # Failure case analysis
+├── automated_proctor.py            # Automated proctoring pipeline
+├── benchmark_object_detection.py   # Object detection benchmarking
+├── detect_objects.py               # YOLOv8 object detection
+├── download_gaze_models.py         # Downloads OpenVINO gaze estimation models
+├── export_model.py                 # Converts YOLO model to OpenVINO IR
+├── gaze_demo.py                    # Gaze estimation demo
+├── gaze_utils.py                   # Gaze estimation helper functions
+├── generate_plots.py               # Generates benchmark graphs
+├── openvino_inference.py           # OpenVINO inference wrapper
+├── proctor_system.py               # Integrated proctoring pipeline
+├── quantize_yolo.py                # INT8 quantization using NNCF
+├── utils.py                        # Common utility functions
+└── yolov8n.pt                      # YOLOv8 pretrained weights
+```
 
 ---
 
@@ -73,27 +64,34 @@ The models were optimized using OpenVINO and INT8 post-training quantization to 
 - Webcam frame acquisition
 - Letterbox preprocessing
 - YOLOv8n inference
+- Confidence filtering
 - Bounding box post-processing
-- Detection of phones, books, laptops, and persons
+
+Detected classes include:
+
+- Person
+- Mobile Phone
+- Book
+- Laptop
 
 ### Gaze Estimation
 
-The gaze estimation module follows a modular four-stage pipeline:
+The gaze estimation pipeline consists of four stages:
 
 1. Face Detection
 2. Head Pose Estimation
 3. Facial Landmark Detection
 4. Gaze Estimation
 
-Each stage performs a dedicated task, allowing the pipeline to remain modular and easier to debug or replace.
+The modular architecture allows each model to perform a specialized task while maintaining real-time performance.
 
 ---
 
-## Performance Optimization
+## Model Optimization
 
 The deployment pipeline includes:
 
-- Conversion from PyTorch to OpenVINO Intermediate Representation (IR)
+- PyTorch to OpenVINO IR conversion
 - OpenVINO Runtime optimization
 - INT8 Post-Training Quantization
 - Calibration dataset generation
@@ -117,18 +115,42 @@ The deployment pipeline includes:
 
 ---
 
-## Repository Structure
+## Running the Project
 
+### Download the gaze estimation models
+
+```bash
+python download_gaze_models.py
 ```
-.
-├── models/
-├── object_detection/
-├── gaze_estimation/
-├── benchmarking/
-├── utils/
-├── report/
-├── presentation/
-└── README.md
+
+### Run object detection
+
+```bash
+python detect_objects.py
+```
+
+### Run the gaze estimation demo
+
+```bash
+python gaze_demo.py
+```
+
+### Run the complete proctoring system
+
+```bash
+python proctor_system.py
+```
+
+### Benchmark object detection
+
+```bash
+python benchmark_object_detection.py
+```
+
+### Quantize the YOLO model
+
+```bash
+python quantize_yolo.py
 ```
 
 ---
@@ -136,14 +158,14 @@ The deployment pipeline includes:
 ## Future Improvements
 
 - Multi-person gaze estimation
-- Face tracking across frames
+- Face tracking across consecutive frames
 - Temporal object tracking
-- Improved robustness under challenging lighting conditions
-- Fine-tuning using domain-specific datasets
-- Production integration with an online proctoring platform
+- Improved robustness under low-light conditions
+- Fine-tuning on domain-specific proctoring datasets
+- Integration with a production proctoring platform
 
 ---
 
 ## Disclaimer
 
-This repository demonstrates the core computer vision inference pipeline and its optimization for CPU deployment. It is a research and engineering prototype and does not represent a complete production-ready online proctoring system.
+This repository demonstrates the core computer vision inference pipeline and its optimization for CPU deployment. It is intended as a research and engineering prototype and is not a complete production-ready online proctoring system.
